@@ -1,0 +1,103 @@
+/*
+SeComLib
+Copyright 2012-2013 TU Delft, Information Security & Privacy Lab (http://isplab.tudelft.nl/)
+
+Contributors:
+Inald Lagendijk (R.L.Lagendijk@TUDelft.nl)
+Mihai Todor (todormihai@gmail.com)
+Thijs Veugen (P.J.M.Veugen@tudelft.nl)
+Zekeriya Erkin (z.erkin@tudelft.nl)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/**
+@file secure_face_recognition_utils/dgk_comparison_client.h
+@brief Definition of class DgkComparisonClient.
+@author Mihai Todor (todormihai@gmail.com)
+*/
+
+#ifndef DGK_COMPARISON_CLIENT_HEADER_GUARD
+#define DGK_COMPARISON_CLIENT_HEADER_GUARD
+
+//include our headers
+#include "utils/config.h"
+#include "core/big_integer.h"
+#include "core/random_provider.h"
+#include "core/paillier.h"
+#include "core/dgk.h"
+
+//include c++ headers
+#include <deque>
+
+namespace SeComLib {
+using namespace Core;
+
+namespace SecureFaceRecognitionUtils {
+	//forward-declare required classes
+	class DgkComparisonServer;
+
+	/**
+	@brief Secure Comparison Client
+	*/
+	class DgkComparisonClient {
+	public:
+		/// Constructor
+		DgkComparisonClient (const Paillier &paillierCryptoProvider, const Dgk &dgkCryptoProvider, const std::string &configurationPath);
+
+		/// Destructor - void implementation
+		~DgkComparisonClient () {}
+
+		/// Set @f$ \hat{d} @f$ before the comparison protocol is initiated
+		void SetHatD (const BigInteger &hatD);
+
+		/// Computes the encrypted bits of @f$ \hat{d} @f$
+		std::deque<Dgk::Ciphertext> GetHatDBits () const;
+
+		/// Computes @f$ [\lambda] @f$
+		Paillier::Ciphertext ComputeLambda (const std::deque<Dgk::Ciphertext> &e) const;
+
+		/// Setter for this->dgkComparisonServer
+		void SetServer (const std::shared_ptr<DgkComparisonServer> &dgkComparisonServer);
+
+		/// Prints 0 if the received encryption is [0] and 1 otherwise
+		void DebugDgkEncryption (const Dgk::Ciphertext &input) const;
+
+	private:
+		/// Reference to the Paillier crypto provider
+		const Paillier &paillierCryptoProvider;
+
+		/// Reference to the DGK crypto provider
+		const Dgk &dgkCryptoProvider;
+
+		/// A reference to the DgkComparisonServer
+		std::shared_ptr<const DgkComparisonServer> dgkComparisonServer;
+
+		/// Bitsize of comparison operands
+		size_t l;
+
+		/// @f$ \hat{d} @f$
+		BigInteger hatD;
+
+		/// @f$ [-2^l] @f$
+		Paillier::Ciphertext encryptedMinusTwoPowL;
+
+		/// Copy constructor - not implemented
+		DgkComparisonClient (DgkComparisonClient const &);
+
+		/// Copy assignment operator - not implemented
+		DgkComparisonClient operator= (DgkComparisonClient const &);
+	};
+}//namespace SecureFaceRecognitionUtils
+}//namespace SeComLib
+
+#endif//DGK_COMPARISON_CLIENT_HEADER_GUARD

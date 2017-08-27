@@ -1,0 +1,179 @@
+<!--
+SeComLib
+Copyright 2012-2013 TU Delft, Information Security & Privacy Lab (http://isplab.tudelft.nl/)
+
+Contributors:
+Inald Lagendijk (R.L.Lagendijk@TUDelft.nl)
+Mihai Todor (todormihai@gmail.com)
+Thijs Veugen (P.J.M.Veugen@tudelft.nl)
+Zekeriya Erkin (z.erkin@tudelft.nl)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!--
+@file config.xml
+@brief Configuration XML file
+@details Contains all the available options of the library
+@author Mihai Todor (todormihai@gmail.com)
+-->
+<?xml version="1.0"?>
+<config>
+	<Core>
+		<Paillier>
+			<keySize>1024</keySize>
+		</Paillier>
+		<OkamotoUchiyama>
+			<keySize>1023</keySize>
+			<sizeT>160</sizeT><!-- The bit size of p's prime factor, t -->
+			<!-- The bit size of the message space (if the private key is not available) -->
+			<messageSpaceSize>300</messageSpaceSize><!-- Must be less than the bit size of p, which is, roughly, 1/3 of keySize -->
+		</OkamotoUchiyama>
+		<ElGamal>
+			<keySize>1024</keySize>
+			<!-- Security parameter used to specify the size (in bits) of the large prime factor for p - 1 -->
+			<largePrimeFactorSize>160</largePrimeFactorSize>
+			<!-- The size of the message space (in bits); must be smaller than largePrimeFactorSize -->
+			<messageSpaceThresholdBitSize>16</messageSpaceThresholdBitSize>
+		</ElGamal>
+		<Dgk>
+			<k>1024</k><!-- Number of bits -->
+			<t>160</t><!-- Number of bits -->
+			<l>19</l><!-- the message space will be the smallest prime having more than l + 2 bits -->
+		</Dgk>
+		<RandomizerCache>
+			<capacity>100</capacity>
+		</RandomizerCache>
+	</Core>
+	
+	<SecureRecommendations>
+		<!-- Valid values: accuracy, performance, traffic (defaults to accuracy) -->
+		<analysisType>performance</analysisType>
+		<!-- Valid values: linear, homogeneous_poly, inhomogeneous_poly, rbf -->
+		<kernel>linear</kernel>
+		<Svm>
+			<!-- We want to preserve a minimum number of relevant decimal digits from x_i and s_i. Range: 1, 2, 3, ... -->
+			<minimumFeatureDecimalDigits>6</minimumFeatureDecimalDigits><!-- use values above 6 to get good accuracy -->
+			<!-- We want to preserve a minimum number of relevant decimal digits from a_i and b, after dividing them by min(a_i, b). Range: 1, 2, 3, ... -->
+			<minimumAiDecimalDigits>3</minimumAiDecimalDigits><!-- use values above 3 to get good accuracy -->
+			<!-- The number of digits preserved in the inverse quadratic RBF kernel value after performing the division -->
+			<!-- Increase this to  or 10 if needed... -->
+			<inverseQuadraticRbfKernelRelevantDigits>8</inverseQuadraticRbfKernelRelevantDigits>
+		</Svm>
+		<Server>
+			<!-- Number of content items -->
+			<contentItemCount>11</contentItemCount>
+			<blindingFactorSize>100</blindingFactorSize><!-- Expressed in bits. Be careful not to cause overflows!!! -->
+			<modelFileExtension>model</modelFileExtension>
+			<MedicalRelevanceBlock>
+				<!-- Hardcoded file name template: clusterivj.model, where 1 <= i < j -->
+				<svmModelsFolder>D:/mtodor/_Work/Projects/SeComLib/resources/secure_recommendations/models/medical_relevance/</svmModelsFolder>
+				<clusters>5</clusters>
+			</MedicalRelevanceBlock>
+			<SafetyBlock>
+				<svmModelsFolder>D:/mtodor/_Work/Projects/SeComLib/resources/secure_recommendations/models/safety/</svmModelsFolder>
+				<!-- File name format: qolunsafe0123456.model where 0123456 are a series of digits representing the unsafe classes -->
+				<modelFilePrefix>qolunsafe</modelFilePrefix>
+			</SafetyBlock>
+		</Server>
+		<Hub>
+			<testFilesDirectory>D:/mtodor/_Work/Projects/SeComLib/resources/secure_recommendations/input_small/</testFilesDirectory>
+			<medicalRelevanceTestFile>philips.test.medical</medicalRelevanceTestFile>
+			<!-- Will be followed by the unsafe classes (digits from 0 to 6) -->
+			<safetyTestFilesPrefix>philips.test.unsafe</safetyTestFilesPrefix>
+			<attributeCount>10</attributeCount>
+			<testVectorCount>10</testVectorCount>
+		</Hub>
+	</SecureRecommendations>
+	
+	<SecureFaceRecognition>
+		<a>255</a>
+		<b>255</b>
+		<!-- Bitsize of secure comparison operands -->
+		<l>8</l>
+		<BlindingFactorCache>
+			<capacity>100</capacity>
+			<!-- Security parameter for additive blinding -->
+			<kappa>40</kappa><!-- Expressed in bits -->
+		</BlindingFactorCache>
+	</SecureFaceRecognition>
+	
+	<SecureExtremumSelection>
+		<testVectorLength>50</testVectorLength>
+		<!-- Bitsize of test vector elements -->
+		<l>12</l>
+		<BlindingFactorCache>
+			<capacity>100</capacity>
+			<!-- Security parameter for additive blinding -->
+			<kappa>40</kappa><!-- Expressed in bits -->
+		</BlindingFactorCache>
+	</SecureExtremumSelection>
+	
+	<SecureDistanceEvaluation>
+		<testVectorLength>10</testVectorLength>
+		<!-- Bitsize of test vector elements -->
+		<l>12</l>
+		<BlindingFactorCache>
+			<capacity>100</capacity>
+			<!-- Security parameter for additive blinding -->
+			<kappa>40</kappa><!-- Expressed in bits -->
+		</BlindingFactorCache>
+	</SecureDistanceEvaluation>
+	
+	<PrivateRecommendations>
+		<ratingsFilePath>D:/mtodor/Desktop/plaintext_version/ratings1000.txt</ratingsFilePath>
+		<!-- Number of users who need recommendations -->
+		<userCount>1000</userCount>
+		<!-- Number of ratings per user -->
+		<itemCount>1000</itemCount>
+		<!-- Number of densely rated items (the paper suggests using values in the range 10 - 50) -->
+		<denselyRatedItemCount>20</denselyRatedItemCount>
+		<!-- The bit size of the user ratings -->
+		<t>3</t>
+		<!-- Number of digits preserved from the normalized user ratings -->
+		<digitsToPreserve>3</digitsToPreserve>
+		<!-- Value from interval (0, 1) -->
+		<similarityTreshold>0.87</similarityTreshold>
+		<!-- Bitsize of secure comparison operands -->
+		<l>20</l><!-- Expressed in bits -->
+		<BlindingFactorCache>
+			<!-- Blinding security parameter -->
+			<kappa>40</kappa><!-- Expressed in bits -->
+			<capacity>100</capacity>
+		</BlindingFactorCache>
+	</PrivateRecommendations>
+	
+	<PrivateRecommendationsDataPacking>
+		<ratingsFilePath>D:/mtodor/Desktop/plaintext_version/ratings1000.txt</ratingsFilePath>
+		<!-- Number of users who need recommendations -->
+		<userCount>1000</userCount>
+		<!-- Number of ratings per user -->
+		<itemCount>1000</itemCount>
+		<!-- Number of densely rated items (the paper suggests using values in the range 10 - 50) -->
+		<denselyRatedItemCount>20</denselyRatedItemCount>
+		<!-- The bit size of the user ratings -->
+		<t>3</t>
+		<!-- The bit size of the scaled and normalized ratings, denoted as k in the paper -->
+		<scaledNormalizedRatingBitSize>10</scaledNormalizedRatingBitSize>
+		<!-- Number of digits preserved from the normalized user ratings (s parameter) -->
+		<digitsToPreserve>3</digitsToPreserve>
+		<!-- Value from interval (0, 1) -->
+		<similarityTreshold>0.87</similarityTreshold>
+		<!-- \hat{L} -->
+		<hatL>256</hatL>
+		<BlindingFactorCache>
+			<!-- Blinding security parameter -->
+			<kappa>40</kappa><!-- Expressed in bits -->
+			<capacity>100</capacity>
+		</BlindingFactorCache>
+	</PrivateRecommendationsDataPacking>
+</config>

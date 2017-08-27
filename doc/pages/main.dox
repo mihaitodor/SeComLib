@@ -1,0 +1,166 @@
+/*
+SeComLib
+Copyright 2012-2013 TU Delft, Information Security & Privacy Lab (http://isplab.tudelft.nl/)
+
+Contributors:
+Inald Lagendijk (R.L.Lagendijk@TUDelft.nl)
+Mihai Todor (todormihai@gmail.com)
+Thijs Veugen (P.J.M.Veugen@tudelft.nl)
+Zekeriya Erkin (z.erkin@tudelft.nl)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/**
+@mainpage SeComLib Project
+ 
+@section introduction Introduction
+
+<h3>Secure Computation Library (SeComLib) </h3>
+
+<p>Secure signal processing (SSP) is a new discipline that merges signal processing and cryptography. The main idea is to protect privacy-sensitive data by using special cryptographic schemes that enable realization of signal processing algorithms in the encrypted domain. Protocols that process data under encryption are published in literature but efficient code is barely available and reusability is a serious issue. This hampers the further uptake of secure signal processing in projects, science, and utilization.  Therefore, we have developed a software library that provides a generic framework for realizing secure signal processing applications based on cryptographic techniques. The library contains efficient implementations of cryptographic building blocks for designing secure protocols to help the scientific community with code development.</p>
+
+<p>Providing such a library for fast and efficient implementations of cryptographic protocols may have a great impact in the scientific community.  However, the code is not industry-hard, thus commercial products are not likely to be developed directly on the basis of this code. The aim is to impact science by providing a research tool such that secure protocols can be implemented with little effort and to enable collaboration with companies by providing proof of concept examples. </p>
+
+<p>The library has been developed for the Windows and Linux platforms. It is written in C++ and uses the GMP and MPIR libraries for big integer arithmetic. </p>
+
+<p>The library contains cryptographic building blocks such as homomorphic encryption schemes and implementations of signal processing algorithms. More precisely, the Paillier, Okamoto-Uchiyama, DGK, and El Gamal encryption schemes have been implemented. As a vital building block, the library supports data packing, where a number of signal samples are concatenated prior to encryption.  The library also has a feature to generate randomizers to be used in the cryptosystems.</p>
+
+<p>Based on the above building blocks, the library provides cryptographic protocols based on the server-client model. The implemented protocols include secure comparison, secure multiplication, secure sign evaluation, etc. These protocols are used to build secure recommender and clustering (K-means and SVM based) systems. </p>
+
+@section details Details
+
+<h3>Features:</h3>
+<ul>
+	<li>Multiplatform (Windows and Linux)</li>
+	<li>Makes use of the GMP and MPIR libraries for big integer arithmetic, number theoretic operations and random number generation</li>
+	<li>Written using robust C++ code, that leverages STL containers and algorithms as much as possible</li>
+	<li>Global configuration file in XML format</li>
+	<li>Well documented generic classes which can be easily extended</li>
+</ul>
+
+<h3>Building blocks:</h3>
+<ul>
+	<li>BigInteger wrapper class for the GMP (or MPIR) library, that handles big number arithmetic operations and number theoretic operations. The GMP library can be substituted by any other big number library, as long as the required functionality is implemented.</li>
+	<li>Abstract template crypto provider class - a public interface for additive homomrphic cryptosystems:</li>
+	<ul>
+		<li>Paillier: Public-Key Cryptosystems Based on Composite Degree Residuosity Classes, Pascal Paillier, 1999</li>
+		<li>Okamoto-Uchiyama: Accelerating Okamoto-Uchiyama's Public-Key Cryptosystem, Jean-Sebastien Coron, David Naccache, and Pascal Paillier, 1999</li>
+		<li>DGK: A correction to "Efficient and Secure Comparison for On-Line Auctions", Ivan Damgard, Martin Geisler, and Mikkel Kroigaard, 2009</li>
+		<li>ElGamal: A Secure and Optimally Efficient Multi-Authority Election Scheme, Ronald Cramer, Rosario Gennaro, Berry Schoenmakers, 1997</li>
+	</ul>
+	<li>Template data packing class: provides data packing functionality for any of the above mentioned cryptosystems, where a number of signal samples are concatenated prior to encryption</li>
+	<li>Randomizer cache: pre-computes a given amount of randomizers for the cryptosystems as well as the ones required by the certain protocols. </li>
+	<li>WARNING: At this time, the implementation reuses the randomizers after the cache is exhausted. In a future version, an implementation based on background threads which refill the randomizer caches continuously is desired.</li>
+</ul>
+
+<h3>Simulations:</h3>
+<ul>
+	<li>"Privacy-Preserving Recommender Systems in eHealth Systems", Arjan Jeckmans, Pieter Hartel, Michael Beye, Zekeriya Erkin, Mihai Todor, Inald Lagendijk, Jeroen Doumen, Tanya Ignatenko, 2013.</li>
+	<ul>
+		<li>Secure SVM evaluation for various kernels: linear, polynomial and inverse quadratic RBF</li>
+		<li>Interactive division protocol</li>
+		<li>Interactive sign evaluation protocol</li>
+		<li>Interactive maximum evaluation protocol</li>
+		<li>Client - server mockup implementation</li>
+	</ul>
+	<li>"Generating Private Recommendations Efficiently Using Homomorphic Encryption and Data Packing", Zekeriya Erkin, Thijs Veugen, Tomas Toft, and Reginald L. Lagendijk, 2012</li>
+	<ul>
+		<li>Two versions: with and without data packing</li>
+		<li>Secure Paillier + DGK comparison protocol</li>
+		<li>Secure multiplication protocol</li>
+		<li>Client - server mockup implementation</li>
+	</ul>
+	<li>Simulation for "Privacy-Preserving Face Recognition", Zekeriya Erkin, Martin Franz, Jorge Guajardo, Stefan Katzenbeisser, Inald Lagendijk, Tomas Toft, 2009 (with speedup enhancements as described in Martin Franz' Master Thesis from 2008)</li>
+	<ul>
+		<li>The implementation contains only the Paillier + DGK comparison protocol</li>
+		<li>Client - server mockup implementation</li>
+	</ul>
+	<li>"Privacy Preserving Processing of Biomedical Signals with Application to Remote Healthcare Systems", Riccardo Lazzeretti, Ph.D Thesis in Information Engineering, University of Siena, 2012</li>
+	<ul>
+		<li>Implementation of the secure minimum and maximum selection algorithms</li>
+		<li>Client - server mockup implementation</li>
+	</ul>
+</ul>
+
+<h1>Build Instructions</h1>
+
+@section linux Linux
+<h3>Ubuntu 12.04 x64 under VirtualBox</h3>
+
+@subsection prerequisites Prerequisites
+<h5>Libraries</h5>
+- GMP - if it has issues detecting the platform (on VirtualBox) use generic k8 for configure: --host=k8-unknown-linux-gnu ABI=64
+	- tar -jxvf gmp-5.0.5.tar.bz2
+	- ./configure --disable-shared --prefix=/workspace/mtodor/_lib/gmp
+	- make
+	- make check
+	- sudo make install
+
+- MPIR - if it has issues detecting the platform (on VirtualBox) use generic k8 for configure: --host=k8-unknown-linux-gnu ABI=64
+	- tar -jxvf mpir-2.5.1.tar.bz2
+	- ./configure --disable-shared --prefix=/workspace/mtodor/_lib/mpir
+	- make
+	- make check
+	- sudo make install
+	
+- Boost
+	- sudo apt-get install gcc-multilib
+	- download boost_1_53_0.tar.gz and extract
+	- open a terminal and cd to the extracted directory
+	- ./bootstrap.sh
+	- ./b2 --build-type=complete --layout=versioned --without-mpi --without-python link=static runtime-link=static threading=multi address-model=64 install --prefix=path_to_install_directory --libdir=path_to_install_directory/lib
+
+@subsection library SeComLib Library
+	- make - builds the release target by default
+	- make release - creates release build
+	- make debug - creates debug build
+	- make test - creates and runs the test project
+
+@subsection usage Usage
+See the resources/sample folder for a simple "Hello World" project and the test folder for some extra examples
+
+@section windows Windows
+<h3>Windows 7 x64 SP1</h3>
+
+@subsection prerequisites Prerequisites
+<h5>Libraries:</h5>
+- MPIR
+	- get sources from www.mpir.org
+	- build static library release and debug versions for x64 (and x86)
+	- place the mpir.h header in the include/mpir directory
+	- place the mpir.lib files in the appropriate subdirectories of lib
+	
+- Boost
+	- Define BOOST_ROOT and BOOST_INCLUDE in Advanced System Settings > Environment Variables: % BOOST_ROOT % = path_to_install_directory, % BOOST_INCLUDE % = % BOOST_ROOT %\ include\ boost-1_53
+	- download boost_1_53_0.7z and extract
+	- open the "Visual Studio x64 Win64 Command Prompt (2010)" from the Visual Studio 2010 Tools and CD to the boost_1_53_0 folder
+	- bootstrap.bat
+	- b2.exe --build-type=complete --layout=versioned --without-mpi --without-python link=static runtime-link=static threading=multi address-model=32 install --prefix= % BOOST_ROOT % --libdir= % BOOST_ROOT %\ lib\ x86
+	- b2.exe --build-type=complete --layout=versioned --without-mpi --without-python link=static runtime-link=static threading=multi address-model=64 install --prefix= % BOOST_ROOT % --libdir= % BOOST_ROOT %\ lib\ x64
+	
+@subsection library SeComLib Library
+- Open SeComLib.sln with Visual Studio 2010 and configure the include and library paths
+- In Configuration Properties > C/C++ > Preprocessor, add a unique preprocessor definition for each library (LIB_GMP, LIB_MPIR, etc)
+	
+@subsection usage Usage
+See the resources/sample folder for a simple "Hello World" project. Here are the steps required to create your own project from scratch:
+	- Create a new C++ Win32 Console Application
+	- Create x64 platform
+	- For all platforms, in Configuration Properties > C/C++ > Code Generation, set Runtime Library to Multi-threaded Debug (/MTd) or Multi-threaded (/MT) (according to the release type)
+	- In Configuration Properties > VC++ Directories:
+		- Prepend to Include Directories: $ (BOOST_INCLUDE);path_to_SeComLib;path_to_SeComLib\ include;
+		- Prepend to Library Directories (depending on the platform and configuration): path_to_SeComLib\ _output\ x64\ MPIRDebug;path_to_SeComLib\ lib\ x64\ debug;$ (BOOST_ROOT)\ lib\ x64;
+	- For all platforms, in Configuration Properties > C/C++ > Preprocessor, prepend LIB_MPIR (or LIB_GMP if you are using GMP) to the Preprocessor Definitions
+	- For all platforms, in Configuration Properties > Linker > Input, prepend Core.lib;Utils.lib;mpir.lib; to Additional Dependencies
+
+*/
